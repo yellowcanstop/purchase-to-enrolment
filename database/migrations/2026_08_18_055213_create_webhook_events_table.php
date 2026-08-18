@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('webhook_events', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('source');
+            $table->string('external_id')->unique();
+            $table->json('payload');
+            $table->boolean('signature_valid')->default(false);
+            $table->timestamp('received_at')->useCurrent();
+            $table->timestamp('processed_at')->nullable();
         });
     }
 

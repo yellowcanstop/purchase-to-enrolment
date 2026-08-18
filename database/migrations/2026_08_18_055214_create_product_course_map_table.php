@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use function GuzzleHttp\default_ca_bundle;
+
 return new class extends Migration
 {
     /**
@@ -13,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('product_course_map', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('product_id')->unique();
+            $table->unsignedBigInteger('moodle_course_id');
+            $table->unsignedInteger('moodle_role_id')->default(5); // 5 = Student in a stock Moodle install
+            $table->boolean('active')->default(true);
         });
     }
 

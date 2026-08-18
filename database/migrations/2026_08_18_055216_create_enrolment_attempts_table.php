@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('enrolment_attempts', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('enrolment_requests_id')->constrained('enrolment_requests')->cascadeOnDelete();
+            $table->unsignedInteger('attempt_no');
+            $table->json('request_body');
+            $table->json('response_body')->nullable();
+            $table->boolean('succeeded')->default(false);
+            $table->timestamp('created_at')->useCurrent();
+            /*
+            class EnrolmentAttempt extends Model
+            {
+                const UPDATED_AT = null;
+            }
+            */
         });
     }
 
