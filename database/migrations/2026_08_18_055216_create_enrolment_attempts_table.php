@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('enrolment_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('enrolment_requests_id')->constrained('enrolment_requests')->cascadeOnDelete();
+            $table->foreignId('enrolment_request_id')->constrained('enrolment_requests')->cascadeOnDelete();
             $table->unsignedInteger('attempt_no');
             $table->json('request_body');
             $table->json('response_body')->nullable();
