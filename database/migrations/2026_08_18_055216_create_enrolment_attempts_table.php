@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('enrolment_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('enrolment_requests_id')->constrained('enrolment_requests')->cascadeOnDelete();
+            // Laravel's convention is singular (enrolment_request_id), and foreignId() derives the relationship name from the column.
+            // With the plural version (enrolment_requests_id), $attempt->enrolmentRequest() won't auto-resolve
+            $table->foreignId('enrolment_request_id')->constrained('enrolment_requests')->cascadeOnDelete();
             $table->unsignedInteger('attempt_no');
             $table->json('request_body');
             $table->json('response_body')->nullable();

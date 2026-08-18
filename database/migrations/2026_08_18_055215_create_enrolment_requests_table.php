@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('product_id');
             $table->unsignedBigInteger('moodle_user_id')->nullable();
             $table->unsignedBigInteger('moodle_course_id')->nullable();
-            $table->enum('status', ['pending', 'enrolled', 'failed', 'skipped'])->default('pending');
+            // $table->enum('status', ['pending', 'enrolled', 'failed', 'skipped'])->default('pending');
+            // Use a string column plus a PHP enum class to prevent future migration pain when want to add status (ALTER TABLE)
+            $table->string('status', 20)->default('pending');
             $table->unsignedInteger('attempts')->default(0);
             $table->text('last_error')->nullable();
             $table->string('idempotency_key')->unique(); // sha256(order_id:product_id)
