@@ -11,11 +11,11 @@ enum EnrollmentStatus: string
 
   public function label(): string
   {
-    return match($this) {
+    return match ($this) {
       self::Pending => 'Pending',
       self::Enrolled => 'Enrolled',
       self::Failed   => 'Failed',
       self::Skipped  => 'Skipped',
-    }
+    };
   }
 }
