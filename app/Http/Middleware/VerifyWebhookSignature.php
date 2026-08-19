@@ -17,7 +17,7 @@ class VerifyWebhookSignature
     public function handle(Request $request, Closure $next): Response
     {
         $secret = config('services.woocommerce.webhook_secret');
-        $provided = $request->header('X-Webhook-Signature', '');
+        $provided = $request->header('x-wc-webhook-signature', '');
 
         $expected = base64_encode(hash_hmac('sha256', $request->getContent(), $secret, true));
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 /**
  * You need three terminals: php artisan serve, php artisan queue:work redis --verbose, and the one you type in. The command makes a real HTTP request to your own app, so something must be listening — and with php artisan serve (single-threaded PHP dev server) that's fine here because the CLI process and the server are separate processes.
- * 
+ * php artisan optimize:clear // clear cached routes
  * php artisan webhook:fire                                  # happy path, new order
  * php artisan webhook:fire --order-id=555 --times=5         # layer-1 idempotency: 1 accepted, 4 duplicate
  * php artisan webhook:fire --tamper                         # expect 401, no row written
@@ -22,8 +22,6 @@ use Illuminate\Support\Facades\Http;
 
 // Future test for true concurrency: The genuine test is two simultaneous requests, which you'd do with xargs -P or by firing the command twice from two shells at once. Worth doing in M3 when you also run two queue workers — the whole reason for choosing firstOrCreate over check-then-insert is behaviour that only appears under concurrency, and sequential tests will happily pass on the racy version too
 
-#[Signature('app:fire-fake-webhook')]
-#[Description('Command description')]
 class FireFakeWebhook extends Command
 {
     protected $signature = 'webhook:fire
@@ -40,7 +38,7 @@ class FireFakeWebhook extends Command
      */
     public function handle(): int
     {
-        $orderId = $this->option('order_id') ?: rand(1000, 9000);
+        $orderId = $this->option('order-id') ?: rand(1000, 9000);
 
         $payload = [
             'id' => (int) $orderId,
