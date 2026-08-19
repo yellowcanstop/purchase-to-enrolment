@@ -16,6 +16,17 @@ class OrderCompletedRequest extends FormRequest
     }
 
     /**
+     * WooCommerce sends the order as `id`; internally we call it `order_id`
+     * to keep it distinct from `product_id`. Normalise at the boundary.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (! $this->has('order_id') && $this->has('id')) {
+            $this->merge(['order_id' => $this->input('id')]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
