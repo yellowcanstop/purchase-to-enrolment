@@ -40,7 +40,7 @@ final class ProcessWebhookEventJob implements ShouldQueue
         }
 
         $payload = $event->payload;
-        $orderId = (string) $payload['id'];
+        $orderId = (string) $payload['order_id'];
         $email = $payload['billing']['email'];
 
         Log::withContext([
