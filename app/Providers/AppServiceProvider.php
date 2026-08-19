@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\MoodleClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(MoodleClient::class, fn() => new MoodleClient(
+            rtrim(config('services.moodle.base_url'), '/'),
+            config('services.moodle.token')
+        ));
     }
 
     /**

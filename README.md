@@ -30,5 +30,5 @@ Future: containerise Laravel itself. Put Redis and Moodle in one compose file, o
 4. Redis via a compose file in Laravel project root. Test redis using PingJob. First terminal: "php artisan tinker >>> App\Jobs\PingJob::dispatch();". Second terminal: "php artisan queue:work redis --verbose"
 5. Add route and the VerifyHmacSignature middleware. Add request and controller for OrderCompleted. The controller sits between the webhook and the enrolment work. For one event, the controller dispatches ProcessWebhookEventJob which creates one EnrolmentRequest row per mappable item and dispatches one ProcessEnrolmentJob each (each enrolment can succeed and fail independently, even if transacted in one order).
 6. Add fake webhook command.
-7. Add Moodle client and bind it in the container. 
+7. Add Moodle client (and associated exceptions) and bind it in the container. Use Moodle client in ProcessEnrolmentJob.
 8. Start worker, fire fake webhook, and see a real user land in Moodle. 
