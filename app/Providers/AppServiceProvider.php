@@ -13,8 +13,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(MoodleClient::class, fn() => new MoodleClient(
-            rtrim(config('services.moodle.base_url'), '/'),
-            config('services.moodle.token')
+            rtrim(config('moodle.base_url'), '/'),
+            config('moodle.token')
         ));
     }
 
