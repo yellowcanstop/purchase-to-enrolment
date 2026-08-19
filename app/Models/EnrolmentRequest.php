@@ -20,9 +20,9 @@ final class EnrolmentRequest extends Model
         'status' => EnrolmentStatus::class,
     ];
 
-    // relation method. $request->attemptLogs or $request->attemptLogs()->get()
+    // relation method. $request->history or $request->history()->get()
     // returns the list of EnrolmentAttempt records
-    public function attemptLogs(): HasMany
+    public function history(): HasMany
     {
         return $this->hasMany(EnrolmentAttempt::class);
     }
