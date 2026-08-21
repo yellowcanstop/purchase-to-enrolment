@@ -11,6 +11,11 @@ class MoodleApiException extends RuntimeException
     string $message,
     public readonly string $errorCode = 'unknown',
     public readonly ?array $responseBody = null,
+    /** The wsfunction that failed. Without this the error code alone can't
+     * tell you which of the four Moodle calls in an enrolment threw. */
+    public readonly ?string $function = null,
+    /** Params sent, token stripped. */
+    public readonly ?array $requestParams = null,
   ) {
     parent::__construct($message);
   }

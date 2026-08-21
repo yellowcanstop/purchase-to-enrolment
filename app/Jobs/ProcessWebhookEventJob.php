@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\EnrolmentStatus;
 use App\Models\EnrolmentRequest;
 use App\Models\ProductCourseMap;
 use App\Models\WebhookEvent;
@@ -92,7 +93,7 @@ final class ProcessWebhookEventJob implements ShouldQueue
             }
 
 
-            if (! $request->wasRecentlyCreated && $request->status === 'enrolled') {
+            if (! $request->wasRecentlyCreated && $request->status === EnrolmentStatus::Enrolled) {
                 Log::info('Already enrolled, not re-dispatching', [
                     'enrolment_request_id' => $request->id,
                 ]);

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\EnrolmentStatus;
 use App\Models\EnrolmentRequest;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -54,7 +55,7 @@ final class ProcessEnrolmentJob implements ShouldQueue, ShouldBeUnique
             'enrolment_request_id' => $request->id,
         ]);
 
-        if ($request->status === 'enrolled') {
+        if ($request->status === EnrolmentStatus::Enrolled) {
             Log::info('Already enrolled, nothing to do');
             return;
         }
@@ -102,17 +103,28 @@ final class ProcessEnrolmentJob implements ShouldQueue, ShouldBeUnique
         } catch (MoodleApiException $e) {
             $request->history()->create([
                 'attempt_no' => $attemptNo,
-                'request_body' => ['email' => $request->external_user_email],
+                'request_body' => [
+                    'email' => $request->external_user_email,
+                    'wsfunction' => $e->function,
+                    'params' => $e->requestParams,
+                ],
                 'response_body' => $e->responseBody,
                 'succeeded' => false,
             ]);
 
-            $request->update(['last_error' => "{$e->errorCode}: {$e->getMessage()}"]);
+            $request->update(['last_error' => "{$e->function}/{$e->errorCode}: {$e->getMessage()}"]);
 
             if ($e->isPermanent()) {
                 Log::error(
                     'Permanent Moodle error, failing immediately',
-                    ['error_code' => $e->errorCode]
+                    [
+                        'wsfunction' => $e->function,
+                        'error_code' => $e->errorCode,
+                        // Moodle puts the actual rejected value here, but only
+                        // when site debugging is DEVELOPER. Null otherwise.
+                        'debuginfo' => $e->responseBody['debuginfo'] ?? null,
+                        'moodle_message' => $e->getMessage(),
+                    ]
                 );
                 $this->fail($e); // skip straight to failed($e)
                 return;

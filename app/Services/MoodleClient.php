@@ -49,6 +49,8 @@ final class MoodleClient
         $body['message'] ?? 'Unknown Moodle error',
         $body['errorcode'] ?? 'unknown',
         $body,
+        $function,
+        $params,
       );
     }
 
