@@ -32,5 +32,16 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+
+        <!--
+            Tests must never depend on your personal .env. These three are
+            required by code that runs during tests:
+              - AppServiceProvider throws if moodle.base_url / moodle.token are blank
+              - VerifyWebhookSignature hashes with services.woocommerce.webhook_secret
+            The values are deliberately fake: no test is allowed to reach a real host.
+        -->
+        <env name="MOODLE_BASE_URL" value="http://moodle.test"/>
+        <env name="MOODLE_TOKEN" value="test-token"/>
+        <env name="WEBHOOK_SECRET" value="test-webhook-secret"/>
     </php>
 </phpunit>
